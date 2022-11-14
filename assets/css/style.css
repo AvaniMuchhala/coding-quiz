@@ -34,3 +34,7 @@ p {
     margin: 1rem;
     padding: 0.5rem;
 }
+
+form {
+    display: none;
+}
