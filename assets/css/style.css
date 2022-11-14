@@ -27,7 +27,7 @@ p {
     line-height: 1.2;
 }
 
-button {
+#start-button {
     font-size: 1.5rem;
     background-color: purple;
     color: white;
