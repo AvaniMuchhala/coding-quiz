@@ -1,6 +1,9 @@
 var startButton = document.getElementById("start-button");
 var container = document.getElementById("container");
+var timerEl = document.getElementById("timer");
 
+var timeLeft = 75;
+var quizDone = false;
 var question;
 var answerSection; 
 var questionSet =
@@ -31,6 +34,26 @@ var questionSet =
 }];
 
 var index = 0;
+// Create <p> to store the result of current question
+var result = document.createElement("p");
+
+function runClock() {
+    timerEl.textContent = timeLeft;
+    var timeInterval = setInterval(function() {
+        // If time left is 0 sec or user completed quiz, stop execution
+        if (timeLeft === 0 || quizDone) {
+            clearInterval(timeInterval);
+            if (timeLeft === 0) {
+                gameOver();
+                result.textContent = "Time!";
+                container.appendChild(result);
+            }
+        } else {
+            timeLeft--;
+            timerEl.textContent = timeLeft;
+        }
+    }, 1000);
+}
 
 function gameOver() {
     console.log("Game over!");
@@ -40,7 +63,7 @@ function gameOver() {
 
     // Show score
     question.textContent = "All done!";
-    answerSection.textContent = "Your score is: ";
+    answerSection.textContent = "Your score is: " + timeLeft;
     container.append(question);
     container.append(answerSection);
 
@@ -56,8 +79,6 @@ function gameOver() {
 function checkAnswer(event) {
     console.log(event.target.textContent);
 
-    // Create <p> to store the result of current question
-    var result = document.createElement("p");
     // Check if the answer button clicked on is the correct choice 
     if (event.target.textContent === questionSet[index].correctAnswer) {
         console.log("correct");
@@ -65,10 +86,13 @@ function checkAnswer(event) {
     } else {
         console.log("wrong");
         result.textContent = "Wrong!";
+        timeLeft = timeLeft - 10;
+        timerEl.textContent = timeLeft;
     }
 
     // If last question answered, call gameOver()
     if (index === questionSet.length-1) {
+        quizDone = true;
         gameOver();
         container.appendChild(result);
     // If not last question, increment index and call nextQuestion()
@@ -81,6 +105,11 @@ function checkAnswer(event) {
 
 // Function displays each question-answer set
 function nextQuestion(event){
+    // timerEl.textContent = timeLeft;
+    if (index === 0) {
+        runClock();
+    }
+
     // Remove content within container from starting page / previous question
     container.textContent = "";
     // Change alignment of flex items to left
