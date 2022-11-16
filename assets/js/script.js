@@ -1,11 +1,14 @@
+// Get HTML elements from starting page of quiz
 var startButton = document.getElementById("start-button");
-var container = document.getElementById("container");
+var container = document.getElementById("container");   // holds content of quiz
 var timerEl = document.getElementById("timer");
 
 var timeLeft = 75;
-var quizDone = false;
+var quizDone = false;   // becomes true when all questions answered
 var question;
-var answerSection; 
+var answerSection;
+// Array of objects where each object represents each question-answer set
+// "correctAnswer" holds the index of the correct answer in the options array 
 var questionSet =
 [{
     question: "Question 1: Which symbol is used in JavaScript to access an element at a certain index in an array?",
@@ -20,20 +23,22 @@ var questionSet =
 {
     question: "Question 3: What is the correct syntax when defining a for-loop?",
     correctAnswer: 3,
-    options: ["for (condition)", "for (increment; condition; initialization)", "for (condition; initialization; increment)", "for (initialization; condition; increment)"]
+    options: ["1. for (condition)", "2. for (increment; condition; initialization)", "3. for (condition; initialization; increment)", "4. for (initialization; condition; increment)"]
 },
 {
     question: "Question 4: Which of the following is NOT a primitive data type?",
     correctAnswer: 0,
-    options: ["array", "string", "number", "boolean"]
+    options: ["1. array", "2. string", "3. number", "4. boolean"]
 },
 {
     question: "Question 5: How do you make comments in JavaScript?",
     correctAnswer: 2,
-    options: ["<!-- comments -->", "/* comments */", "// comments", "% comments"]
+    options: ["1. <!-- comments -->", "2. /* comments */", "3. // comments", "4. % comments"]
 }];
 
+// index loops through questionSet variable
 var index = 0;
+
 // Create <p> to store the result of current question
 var result = document.createElement("p");
 result.setAttribute("style","color: gray; font-style: italic");
@@ -45,6 +50,7 @@ if(playerScoreList === null) {
     playerScoreList = [];
 }
 
+// ----- Functions ----- //
 function renderScores() {
     playerScoreList.sort((a, b) => b.score - a.score);
 
@@ -67,19 +73,24 @@ function storeScores(playerScore) {
 }
 
 function runClock() {
+    // Update timer
     timerEl.textContent = timeLeft;
     var timeInterval = setInterval(function() {
-        // If time left is 0 sec or user completed quiz, stop execution
-        if (timeLeft === 0 || quizDone) {
+        // If user finished quiz and time>=0, stop execution
+        if (timeLeft >= 0 && quizDone) {
             clearInterval(timeInterval);
-            if (timeLeft === 0) {
-                gameOver();
-                result.textContent = "Time!";
-                container.appendChild(result);
-                setTimeout(function() {
-                    result.textContent = "";
-                },1000);
-            }
+        // If user did not answer all questions before time reached 0
+        } else if (timeLeft === 0 && !quizDone) {
+            clearInterval(timeInterval);
+            timeLeft = timeLeft - ((5-index)*10);   // Deduct 10 seconds for each unanswered question
+            timerEl.textContent = timeLeft;
+            gameOver();
+            result.textContent = "Time! " + (5-index) + " question(s) unanswered.";
+            container.appendChild(result);
+            setTimeout(function() {                 // Remove result after 2 seconds
+                result.textContent = "";
+            },2000);
+        // If time > 0 and quiz is not done yet
         } else {
             timeLeft--;
             timerEl.textContent = timeLeft;
@@ -93,6 +104,9 @@ function viewScores(event) {
     console.log("viewScores called");
 
     var initialsInput = document.querySelector("#initials").value.trim();
+    if (initialsInput = "") {
+        initialsInput = "anonymous";
+    }
     var score = timeLeft;
     console.log(initialsInput + " " + score);
     var playerScore = {
@@ -113,9 +127,13 @@ function viewScores(event) {
     renderScores();
 
     // Create two buttons
+    var buttonSection = document.createElement("section");
+    buttonSection.setAttribute("style", "display: flex");
+    container.append(buttonSection);
+
     var goBack = document.createElement("button");
     goBack.textContent = "Go Back";
-    container.append(goBack);
+    buttonSection.append(goBack);
     // Refresh webpage to return to starting page upon click of Go Back button
     goBack.addEventListener("click", function() {
         window.location.reload();
@@ -123,7 +141,7 @@ function viewScores(event) {
 
     var clearScores = document.createElement("button");
     clearScores.textContent = "Clear Highscores";
-    container.append(clearScores);
+    buttonSection.append(clearScores);
     // Clear local storage and remove highscores from page upon click
     clearScores.addEventListener("click", function() {
         localStorage.clear();
@@ -140,13 +158,14 @@ function gameOver() {
     // Show score
     question.textContent = "All done!";
     answerSection.textContent = "Your score is: " + timeLeft;
+    answerSection.setAttribute("style","font-size: 23px; margin-top: 1rem");
     container.append(question);
     container.append(answerSection);
 
     // Display form to enter user's initials within container element
     var formEl = document.querySelector("form");
     container.append(formEl);
-    formEl.setAttribute("style","display: block");
+    formEl.setAttribute("style","display: block; margin-top: 1.2rem");
 
     // When Submit button clicked, show scoreboard
     var submitEl = document.querySelector("#submit");
@@ -215,15 +234,12 @@ function nextQuestion(event){
     for (var i = 0; i < questionSet[index].options.length; i++) {
         var answerChoice = document.createElement("button");
         answerChoice.textContent = questionSet[index].options[i];
-        answerChoice.setAttribute("style","font-size: 1.2rem; margin: 0 0 1rem 0.5rem; color: white; background-color: purple; padding: 0.4rem; text-align: left; border: none; border-radius: 10px");
+        answerChoice.setAttribute("style","text-align: left");
         answerSection.appendChild(answerChoice); 
         // Each button is clickable and triggers checkAnswer()
         answerChoice.addEventListener("click", checkAnswer);    
     }
 }
 
-
-// viewScoreEl = document.getElementById("view-scores");
-// console.log(viewScoreEl);
-// viewScoreEl.addEventListener("click",viewScores);
+// ----- Driver Code ----- //
 startButton.addEventListener("click", nextQuestion);

@@ -1,25 +1,28 @@
+/* Format timer, move to top-right corner */
 header {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     font-size: 1.5rem;
     margin: 1rem 1rem 4rem 1rem;
 }
 
+/* Make this flex container so that child items (questions and answers) are in column direction */
 #container {
     margin: 0 auto;
     width: 50%;
     height: 50%;
-    /* border: 3px solid black; */
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+/* Format "Coding Quiz Challenge" heading */
 h1 {
     font-size: 3rem;
     margin: 1rem;
 }
 
+/* Format the description of quiz paragraph */
 p { 
     font-size: 1.3rem;
     margin: 1rem;
@@ -27,14 +30,34 @@ p {
     line-height: 1.2;
 }
 
-#start-button {
-    font-size: 1.5rem;
-    background-color: purple;
-    color: white;
-    margin: 1rem;
-    padding: 0.5rem;
-}
-
+/* Hide form until last question in quiz is answered */
 form {
     display: none;
+}
+
+label {
+    font-size: 23px;
+    font-weight: 200;
+}
+
+/* Make text field bigger */
+#initials {
+    font-size: 23px;
+}
+
+/* Format Highscores list */
+ol {
+    font-size: 1.5rem;
+    margin: 0 0 0 1.2rem;
+}
+
+/* Format all buttons (i.e start, answers, submit) the same way */
+button, #submit {
+    font-size: 1.4rem; 
+    margin: 1.3rem 1rem 0 1rem; 
+    color: white; 
+    background-color: purple; 
+    padding: 0.4rem; 
+    border: none; 
+    border-radius: 10px
 }

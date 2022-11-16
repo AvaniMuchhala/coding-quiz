@@ -10,8 +10,8 @@
 </head>
 
 <body>
+    <!-- Header includes timer -->
     <header>
-        <p id="view-scores">View Highscores</p>
         <p>Time: <span id="timer">0</span></p> 
     </header>
 
@@ -19,11 +19,11 @@
         <!-- Container will hold all content throughout quiz -->
         <section id="container">
             <h1>Coding Quiz Challenge</h1>  
-            <p>The quiz is made up of 5 multiple-choice questions. Try to answer the following questions within the time limit. The penalty for answering a question wrong is a time deduction of 10 seconds. At the end of the quiz, your score will be the amount of time left.</p>
+            <p>The quiz is about JavaScript fundamentals. The quiz is made up of 5 multiple-choice questions. Try to answer the following questions within the time limit of 75 seconds. The penalty for answering a question wrong is a time deduction of 10 seconds. 10 seconds will also be deducted for each unanswered question if the timer reaches 0 seconds before the quiz is completed. At the end of the quiz, your score will be the amount of time left.</p>
             <button id="start-button">Start Quiz</button>
         </section>
 
-        <!-- Initially hidden form to enter initials -->
+        <!-- Initially hidden form to enter user's initials -->
         <form>
             <label for="initials">Enter your initials: </label>
             <input type="text" id="initials"> 
