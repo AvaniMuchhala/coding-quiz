@@ -20,6 +20,7 @@ header {
 h1 {
     font-size: 3rem;
     margin: 1rem;
+    text-align: center;
 }
 
 /* Format the description of quiz paragraph */
@@ -60,4 +61,22 @@ button, #submit {
     padding: 0.4rem; 
     border: none; 
     border-radius: 10px
+}
+
+/* Buttons become less opaque upon mouse hover */
+button:hover, #submit:hover {
+    opacity: 0.65;
+}
+
+/* Media Queries to enlarge container as screen gets smaller */
+@media screen and (max-width: 900px){
+    #container {
+        width: 75%;
+    }
+}
+
+@media screen and (max-width: 400px){
+    #container {
+        width: 90%;
+    }
 }

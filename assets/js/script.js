@@ -51,7 +51,34 @@ if(playerScoreList === null) {
 }
 
 // ----- Functions ----- //
+function runClock() {
+    // Update timer
+    timerEl.textContent = timeLeft;
+    var timeInterval = setInterval(function() {
+        // If user finished quiz, stop execution
+        if (quizDone) {
+            clearInterval(timeInterval);
+        // If user did not answer all questions before time reached 0 (or <0 due to incorrect answers)
+        } else if (timeLeft <= 0 && !quizDone) {
+            clearInterval(timeInterval);
+            timeLeft = timeLeft - ((5-index)*10);   // Deduct 10 seconds for each unanswered question
+            timerEl.textContent = timeLeft;
+            gameOver();
+            result.textContent = "Time! " + (5-index) + " question(s) unanswered.";
+            container.appendChild(result);
+            setTimeout(function() {                 // Remove result after 5 seconds
+                result.textContent = "";
+            },5000);
+        // If time > 0 and quiz is not done yet
+        } else {
+            timeLeft--;
+            timerEl.textContent = timeLeft;
+        }
+    }, 1000);
+}
+
 function renderScores() {
+    // Sort objects in playerScoreList by their score values in descending order
     playerScoreList.sort((a, b) => b.score - a.score);
 
     // Create ordered list of highscores
@@ -66,49 +93,23 @@ function renderScores() {
     }
 }
 
+// Keep history of all players by adding object for each player that takes quiz and store locally 
 function storeScores(playerScore) {
-    console.log("storeScores() called");
     playerScoreList.push(playerScore);
     localStorage.setItem("highscores", JSON.stringify(playerScoreList));
-}
-
-function runClock() {
-    // Update timer
-    timerEl.textContent = timeLeft;
-    var timeInterval = setInterval(function() {
-        // If user finished quiz and time>=0, stop execution
-        if (timeLeft >= 0 && quizDone) {
-            clearInterval(timeInterval);
-        // If user did not answer all questions before time reached 0
-        } else if (timeLeft === 0 && !quizDone) {
-            clearInterval(timeInterval);
-            timeLeft = timeLeft - ((5-index)*10);   // Deduct 10 seconds for each unanswered question
-            timerEl.textContent = timeLeft;
-            gameOver();
-            result.textContent = "Time! " + (5-index) + " question(s) unanswered.";
-            container.appendChild(result);
-            setTimeout(function() {                 // Remove result after 2 seconds
-                result.textContent = "";
-            },2000);
-        // If time > 0 and quiz is not done yet
-        } else {
-            timeLeft--;
-            timerEl.textContent = timeLeft;
-        }
-    }, 1000);
 }
 
 // Function to view scoreboard
 function viewScores(event) {
     event.preventDefault();
-    console.log("viewScores called");
 
+    // Retrieve input field value and trim extra white space
     var initialsInput = document.querySelector("#initials").value.trim();
-    if (initialsInput = "") {
+    if (initialsInput === "") {           // if user didn't input initials, fill in anonymous
         initialsInput = "anonymous";
     }
     var score = timeLeft;
-    console.log(initialsInput + " " + score);
+    // Object to hold individual player's initials and score
     var playerScore = {
         initials: initialsInput,
         score: score
@@ -124,6 +125,7 @@ function viewScores(event) {
     highscoreTitle.textContent = "Highscores";
     container.append(highscoreTitle);
 
+    // Display history of players' initials and scores
     renderScores();
 
     // Create two buttons
@@ -131,18 +133,18 @@ function viewScores(event) {
     buttonSection.setAttribute("style", "display: flex");
     container.append(buttonSection);
 
+    // Click "Go Back" button to refresh webpage to return to starting page
     var goBack = document.createElement("button");
     goBack.textContent = "Go Back";
     buttonSection.append(goBack);
-    // Refresh webpage to return to starting page upon click of Go Back button
     goBack.addEventListener("click", function() {
         window.location.reload();
     });
 
+    // Click "Clear Highscores" button to clear local storage and remove highscores from page
     var clearScores = document.createElement("button");
     clearScores.textContent = "Clear Highscores";
     buttonSection.append(clearScores);
-    // Clear local storage and remove highscores from page upon click
     clearScores.addEventListener("click", function() {
         localStorage.clear();
         document.querySelector("ol").textContent = "";
@@ -150,13 +152,11 @@ function viewScores(event) {
 }
 
 function gameOver() {
-    console.log("Game over!");
-
     // Remove content within container from the last question 
     container.textContent = "";
 
     // Show score
-    question.textContent = "All done!";
+    question.textContent = "Done!";
     answerSection.textContent = "Your score is: " + timeLeft;
     answerSection.setAttribute("style","font-size: 23px; margin-top: 1rem");
     container.append(question);
@@ -170,21 +170,16 @@ function gameOver() {
     // When Submit button clicked, show scoreboard
     var submitEl = document.querySelector("#submit");
     submitEl.addEventListener("click", viewScores);
-
 }
 
 // Function checks whether answer is correct/wrong and shows result while next question displayed
 function checkAnswer(event) {
-    console.log(event.target.textContent);
-
     // Check if the answer button clicked on is the correct choice 
     correctAnswerIndex = questionSet[index].correctAnswer;
     if (event.target.textContent === questionSet[index].options[correctAnswerIndex]) {
-        console.log("correct");
         result.textContent = "Correct!";
     // If wrong answer, deduct 10 seconds from timeLeft and update time immediately    
     } else {
-        console.log("wrong");
         result.textContent = "Wrong!";
         timeLeft = timeLeft - 10;
         timerEl.textContent = timeLeft;
@@ -230,7 +225,7 @@ function nextQuestion(event){
     // All buttons are flex items, stacked vertically
     answerSection.setAttribute("style", "display: flex; flex-direction: column");  
 
-    // Create 4 answer choice buttons within answer section 
+    // Create 4 answer choice buttons within the answer section 
     for (var i = 0; i < questionSet[index].options.length; i++) {
         var answerChoice = document.createElement("button");
         answerChoice.textContent = questionSet[index].options[i];
