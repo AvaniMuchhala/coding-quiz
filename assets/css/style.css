@@ -7,9 +7,9 @@ header {
 
 #container {
     margin: 0 auto;
-    width: 60%;
+    width: 50%;
     height: 50%;
-    border: 3px solid black;
+    /* border: 3px solid black; */
     display: flex;
     flex-direction: column;
     align-items: center;
