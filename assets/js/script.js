@@ -8,29 +8,29 @@ var question;
 var answerSection; 
 var questionSet =
 [{
-    question: "Question 1:",
-    correctAnswer: "Answer 1",
-    options: ["Answer 1","Answer 2", "Answer 3", "Answer 4"]
+    question: "Question 1: Which symbol is used in JavaScript to access an element at a certain index in an array?",
+    correctAnswer: 1,
+    options: ["1. Parantheses: ( )", "2. Square brackets: [ ]", "3. Curly braces: { }", "4. Angle brackets < >"]
 }, 
 {
-    question: "Question 2:",
-    correctAnswer: "Answer 2",
-    options: ["Answer 1","Answer 2", "Answer 3", "Answer 4"]
+    question: "Question 2: Which of the following is NOT a JavaScript Window Object method?",
+    correctAnswer: 2,
+    options: ["1. alert()", "2. confirm()", "3. push()", "4. prompt()"]
 },
 {
-    question: "Question 3:",
-    correctAnswer: "Answer 3",
-    options: ["Answer 1","Answer 2", "Answer 3", "Answer 4"]
+    question: "Question 3: What is the correct syntax when defining a for-loop?",
+    correctAnswer: 3,
+    options: ["for (condition)", "for (increment; condition; initialization)", "for (condition; initialization; increment)", "for (initialization; condition; increment)"]
 },
 {
-    question: "Question 4:",
-    correctAnswer: "Answer 4",
-    options: ["Answer 1","Answer 2", "Answer 3", "Answer 4"]
+    question: "Question 4: Which of the following is NOT a primitive data type?",
+    correctAnswer: 0,
+    options: ["array", "string", "number", "boolean"]
 },
 {
-    question: "Question 5:",
-    correctAnswer: "Answer 1",
-    options: ["Answer 1","Answer 2", "Answer 3", "Answer 4"]
+    question: "Question 5: How do you make comments in JavaScript?",
+    correctAnswer: 2,
+    options: ["<!-- comments -->", "/* comments */", "// comments", "% comments"]
 }];
 
 var index = 0;
@@ -76,6 +76,9 @@ function runClock() {
                 gameOver();
                 result.textContent = "Time!";
                 container.appendChild(result);
+                setTimeout(function() {
+                    result.textContent = "";
+                },1000);
             }
         } else {
             timeLeft--;
@@ -89,7 +92,7 @@ function viewScores(event) {
     event.preventDefault();
     console.log("viewScores called");
 
-    var initialsInput = document.querySelector("#initials").value;
+    var initialsInput = document.querySelector("#initials").value.trim();
     var score = timeLeft;
     console.log(initialsInput + " " + score);
     var playerScore = {
@@ -156,7 +159,8 @@ function checkAnswer(event) {
     console.log(event.target.textContent);
 
     // Check if the answer button clicked on is the correct choice 
-    if (event.target.textContent === questionSet[index].correctAnswer) {
+    correctAnswerIndex = questionSet[index].correctAnswer;
+    if (event.target.textContent === questionSet[index].options[correctAnswerIndex]) {
         console.log("correct");
         result.textContent = "Correct!";
     // If wrong answer, deduct 10 seconds from timeLeft and update time immediately    
@@ -178,6 +182,9 @@ function checkAnswer(event) {
     }
     // Show result from previous question on the page with next question
     container.appendChild(result);
+    setTimeout(function() {
+        result.textContent = "";
+    },1000);
 }
 
 // Function displays each question-answer set
@@ -208,7 +215,7 @@ function nextQuestion(event){
     for (var i = 0; i < questionSet[index].options.length; i++) {
         var answerChoice = document.createElement("button");
         answerChoice.textContent = questionSet[index].options[i];
-        answerChoice.setAttribute("style","font-size: 1.2rem; margin: 0 0 1rem 0.5rem; color: white; background-color: purple; padding: 0.3rem");
+        answerChoice.setAttribute("style","font-size: 1.2rem; margin: 0 0 1rem 0.5rem; color: white; background-color: purple; padding: 0.4rem; text-align: left; border: none; border-radius: 10px");
         answerSection.appendChild(answerChoice); 
         // Each button is clickable and triggers checkAnswer()
         answerChoice.addEventListener("click", checkAnswer);    
