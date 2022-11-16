@@ -6,11 +6,12 @@ This is a timed quiz on JavaScript fundamentals that stores each player's scores
 
 ## Usage
 
-Click on Website URL:
+Click on Website URL: https://avanimuchhala.github.io/coding-quiz/
 
 Once on the website, first read the instructions. When ready, click on the "Start" button. Work through the 5 questions and click on the answer choice you think is correct. You will be notified whether your answer choice is correct or wrong. Once you are done with the quiz or the timer has reached 0 seconds, you will have the option to enter your initials and store your score on the "Highscores" page. 
 
 Below is an animation demonstrating the application functionality: 
+![coding quiz demo](./assets/coding-quiz-demo.gif)
 
 ## License
 
